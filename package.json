@@ -1,0 +1,71 @@
+{
+  "name": "imap-to-discord",
+  "version": "0.1.0",
+  "description": "AWS Lambda that retrieves emails from an IMAP mailbox and sends them to Discord",
+  "keywords": [
+    "aws",
+    "email",
+    "imap",
+    "discord"
+  ],
+  "license": "MIT",
+  "author": {
+    "name": "Steven Brown",
+    "email": "StevenGBrown@gmail.com"
+  },
+  "main": "lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/StevenGBrown/imap-to-discord.git"
+  },
+  "scripts": {
+    "cdk": "cdk",
+    "bootstrap": "cdk bootstrap",
+    "deploy": "npm run lint && cdk deploy",
+    "lint": "tsc --noEmit && eslint . --max-warnings 0 --ext .js,.ts",
+    "start": "ts-node bin/start.ts"
+  },
+  "dependencies": {
+    "@aws-cdk/aws-dynamodb": "1.134.0",
+    "@aws-cdk/aws-events": "1.134.0",
+    "@aws-cdk/aws-events-targets": "1.134.0",
+    "@aws-cdk/aws-iam": "1.134.0",
+    "@aws-cdk/aws-lambda": "1.134.0",
+    "@aws-cdk/aws-lambda-nodejs": "1.134.0",
+    "@aws-cdk/aws-logs": "1.134.0",
+    "@aws-cdk/core": "1.134.0",
+    "@aws-sdk/client-dynamodb": "3.44.0",
+    "@aws-sdk/client-s3": "3.44.0",
+    "@aws-sdk/lib-dynamodb": "3.44.0",
+    "discord.js": "12.5.3",
+    "escape-string-regexp": "4.0.0",
+    "get-stream": "6.0.1",
+    "imap": "0.8.19",
+    "mailparser": "3.4.0",
+    "zod": "3.11.6"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "8.10.84",
+    "@types/imap": "0.8.35",
+    "@types/mailparser": "3.4.0",
+    "@types/node": "16.11.1",
+    "@types/ws": "8.2.1",
+    "@typescript-eslint/eslint-plugin": "5.0.0",
+    "@typescript-eslint/parser": "5.0.0",
+    "aws-cdk": "1.134.0",
+    "esbuild": "0.13.8",
+    "eslint": "7.28.0",
+    "eslint-config-prettier": "8.3.0",
+    "eslint-import-resolver-typescript": "2.5.0",
+    "eslint-plugin-import": "2.23.4",
+    "eslint-plugin-node": "11.1.0",
+    "eslint-plugin-prettier": "3.4.0",
+    "eslint-plugin-security": "1.4.0",
+    "ts-node": "9.1.1",
+    "typescript": "4.4.3"
+  },
+  "engines": {
+    "node": ">=14",
+    "npm": ">=7"
+  }
+}

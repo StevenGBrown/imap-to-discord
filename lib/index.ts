@@ -1,11 +1,16 @@
-import * as dynamodb from '@aws-cdk/aws-dynamodb'
-import * as events from '@aws-cdk/aws-events'
-import * as targets from '@aws-cdk/aws-events-targets'
-import * as lambda from '@aws-cdk/aws-lambda'
-import * as lambdaNodejs from '@aws-cdk/aws-lambda-nodejs'
-import * as logs from '@aws-cdk/aws-logs'
-import * as iam from '@aws-cdk/aws-iam'
-import * as cdk from '@aws-cdk/core'
+import { Construct } from 'constructs'
+import {
+  Duration,
+  Fn,
+  Token,
+  aws_dynamodb,
+  aws_events,
+  aws_events_targets,
+  aws_lambda,
+  aws_lambda_nodejs,
+  aws_logs,
+  aws_iam,
+} from 'aws-cdk-lib'
 
 /**
  * @summary The properties for the ImapToDiscord class.
@@ -23,31 +28,31 @@ export interface ImapToDiscordProps {
    *
    * @default - Default properties are used.
    */
-  readonly lambdaFunctionProps?: lambdaNodejs.NodejsFunctionProps
+  readonly lambdaFunctionProps?: aws_lambda_nodejs.NodejsFunctionProps
 
   /**
    * User provided properties to override the default properties for the DynamoDB table.
    *
    * @default - Default properties are used.
    */
-  readonly tableProps?: dynamodb.TableProps
+  readonly tableProps?: aws_dynamodb.TableProps
 
   /**
    * Specify how often to run the lambda.
    *
    * @default - Every 10 minutes.
    */
-  readonly lambdaSchedule?: events.Schedule
+  readonly lambdaSchedule?: aws_events.Schedule
 }
 
 /**
  * @summary The ImapToDiscord class.
  */
-export class ImapToDiscord extends cdk.Construct {
-  public readonly lambdaFunction: lambdaNodejs.NodejsFunction
-  public readonly table: dynamodb.Table
+export class ImapToDiscord extends Construct {
+  public readonly lambdaFunction: aws_lambda_nodejs.NodejsFunction
+  public readonly table: aws_dynamodb.Table
 
-  constructor(scope: cdk.Construct, id: string, props: ImapToDiscordProps) {
+  constructor(scope: Construct, id: string, props: ImapToDiscordProps) {
     super(scope, id)
 
     // Validation
@@ -55,7 +60,7 @@ export class ImapToDiscord extends cdk.Construct {
       throw new Error(`The configFile prop is required`)
     }
     if (
-      !cdk.Token.isUnresolved(props.configFile) &&
+      !Token.isUnresolved(props.configFile) &&
       !props.configFile.startsWith('arn:aws:s3:::')
     ) {
       throw new Error(
@@ -64,24 +69,24 @@ export class ImapToDiscord extends cdk.Construct {
     }
 
     // DynamoDB table for use by the lambda function
-    this.table = new dynamodb.Table(this, 'table', {
-      partitionKey: { name: 'Id', type: dynamodb.AttributeType.STRING },
-      billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
+    this.table = new aws_dynamodb.Table(this, 'table', {
+      partitionKey: { name: 'Id', type: aws_dynamodb.AttributeType.STRING },
+      billingMode: aws_dynamodb.BillingMode.PAY_PER_REQUEST,
       ...props.tableProps,
     })
 
     // Lambda function bundled using esbuild
-    this.lambdaFunction = new lambdaNodejs.NodejsFunction(this, 'lambda', {
-      runtime: lambda.Runtime.NODEJS_14_X,
+    this.lambdaFunction = new aws_lambda_nodejs.NodejsFunction(this, 'lambda', {
+      runtime: aws_lambda.Runtime.NODEJS_14_X,
       environment: {
         CONFIG_FILE: props.configFile,
         DYNAMODB_TABLE_NAME: this.table.tableName,
         NODE_OPTIONS: '--enable-source-maps',
         ...props.lambdaFunctionProps?.environment,
       },
-      logRetention: logs.RetentionDays.ONE_MONTH,
+      logRetention: aws_logs.RetentionDays.ONE_MONTH,
       memorySize: 512,
-      timeout: cdk.Duration.minutes(5),
+      timeout: Duration.minutes(5),
       reservedConcurrentExecutions: 1,
       bundling: {
         sourceMap: true,
@@ -98,7 +103,7 @@ export class ImapToDiscord extends cdk.Construct {
 
     // Read/write access to the DynamoDB table
     this.lambdaFunction.addToRolePolicy(
-      new iam.PolicyStatement({
+      new aws_iam.PolicyStatement({
         actions: ['dynamodb:GetItem', 'dynamodb:PutItem'],
         resources: [this.table.tableArn],
       })
@@ -106,7 +111,7 @@ export class ImapToDiscord extends cdk.Construct {
 
     // Read-only access to the config file in S3
     this.lambdaFunction.addToRolePolicy(
-      new iam.PolicyStatement({
+      new aws_iam.PolicyStatement({
         actions: ['s3:GetObject'],
         resources: [
           // S3 object keys can contain any UTF-8 character, including IAM special characters
@@ -116,10 +121,10 @@ export class ImapToDiscord extends cdk.Construct {
     )
 
     // Cloudwatch rule to trigger the lambda periodically
-    new events.Rule(this, 'rule', {
+    new aws_events.Rule(this, 'rule', {
       schedule:
-        props.lambdaSchedule ?? events.Schedule.rate(cdk.Duration.minutes(10)),
-      targets: [new targets.LambdaFunction(this.lambdaFunction)],
+        props.lambdaSchedule ?? aws_events.Schedule.rate(Duration.minutes(10)),
+      targets: [new aws_events_targets.LambdaFunction(this.lambdaFunction)],
       description: `Trigger lambda ${this.lambdaFunction.functionName}`,
     })
   }
@@ -128,17 +133,17 @@ export class ImapToDiscord extends cdk.Construct {
   // https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_variables.html#policy-vars-specialchars
   private convertArnToIamResource(arn: string): string {
     if (
-      !cdk.Token.isUnresolved(arn) &&
+      !Token.isUnresolved(arn) &&
       IAM_SPECIAL_CHARACTERS.every((c) => !arn.includes(c))
     ) {
       return arn // No special characters
     }
-    let resource = cdk.Token.asString(cdk.Token.asAny(arn)) // cdk.Fn.split requires a token
+    let resource = Token.asString(Token.asAny(arn)) // Fn.split requires a token
     for (const specialCharacter of IAM_SPECIAL_CHARACTERS) {
       // Escape all occurrences of the special character (find and replace)
-      resource = cdk.Fn.join(
+      resource = Fn.join(
         '${' + specialCharacter + '}',
-        cdk.Fn.split(specialCharacter, resource)
+        Fn.split(specialCharacter, resource)
       )
     }
     return resource

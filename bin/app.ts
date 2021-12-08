@@ -1,9 +1,10 @@
-import * as cdk from '@aws-cdk/core'
+import { Construct } from 'constructs'
+import { App, Stack } from 'aws-cdk-lib'
 
 import { ImapToDiscord } from '../lib'
 
-class ImapToDiscordStack extends cdk.Stack {
-  constructor(scope: cdk.Construct, id: string) {
+class ImapToDiscordStack extends Stack {
+  constructor(scope: Construct, id: string) {
     super(scope, id, {
       description: 'https://github.com/StevenGBrown/imap-to-discord',
     })
@@ -15,6 +16,6 @@ class ImapToDiscordStack extends cdk.Stack {
 }
 
 if (!process.env.npm_lifecycle_script?.includes('cdk "bootstrap"')) {
-  const app = new cdk.App()
+  const app = new App()
   new ImapToDiscordStack(app, 'ImapToDiscordStack')
 }

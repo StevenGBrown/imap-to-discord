@@ -1,4 +1,5 @@
-import Connection from 'imap'
+import Connection from 'node-imap'
+import * as stream from 'node:stream'
 
 export class Imap {
   static async connect(config: Connection.Config): Promise<Imap> {
@@ -71,18 +72,16 @@ export class ImapMailbox {
     )
   }
 
-  public async getEmailContent(
-    uid: number
-  ): Promise<NodeJS.ReadableStream | null> {
-    const fetch = this.connection.fetch(uid, { bodies: '' })
+  public async getEmailContent(uid: number): Promise<stream.Readable | null> {
+    const imapFetch = fixType(this.connection.fetch(uid, { bodies: '' }))
     return await new Promise((resolve, reject) => {
-      fetch.once('message', (message: Connection.ImapMessage) => {
-        message.once('body', (content: NodeJS.ReadableStream) => {
-          resolve(content)
+      imapFetch.once('message', (message) => {
+        fixType(message).once('body', (content) => {
+          resolve(new stream.Readable().wrap(content))
         })
       })
-      fetch.once('error', (error) => reject(error))
-      fetch.once('end', () => {
+      imapFetch.once('error', (error) => reject(error))
+      imapFetch.once('end', () => {
         resolve(null)
       })
     })
@@ -95,4 +94,13 @@ export class ImapMailbox {
       )
     )
   }
+}
+
+/**
+ * Use the `on` function types for the `once` function too.
+ */
+function fixType<EventEmitter extends NodeJS.EventEmitter>(
+  eventEmitter: EventEmitter
+): EventEmitter & { once: EventEmitter['on'] } {
+  return eventEmitter
 }

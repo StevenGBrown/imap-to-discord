@@ -1,12 +1,14 @@
-import { Context } from 'aws-lambda'
-import * as crypto from 'crypto'
+import * as lambda from 'aws-lambda'
 import escapeStringRegexp from 'escape-string-regexp'
 import * as mailparser from 'mailparser'
+import * as crypto from 'node:crypto'
 
 import { Configuration, getConfiguration } from './configuration'
 import * as discord from './discord'
 import * as dynamodb from './dynamodb'
 import { Imap, ImapMailbox } from './imap'
+
+type Context = Pick<lambda.Context, 'getRemainingTimeInMillis'>
 
 export async function handler(event: unknown, context: Context) {
   const [config, nextToRead] = await Promise.all([
@@ -19,7 +21,9 @@ export async function handler(event: unknown, context: Context) {
   const imap = await Imap.connect(config)
   console.timeEnd('Connected')
   try {
+    console.time('Mailbox opened')
     const mailbox = await imap.openMailbox(config)
+    console.timeEnd('Mailbox opened')
     let { uidnext } = mailbox
 
     if (!nextToRead || mailboxHash !== nextToRead.mailboxHash) {
@@ -86,10 +90,10 @@ async function processEmails({
 
   let remaining = uids.length
   for (const uid of uids) {
-    const emailContent = await mailbox.getEmailContent(uid)
-    if (emailContent) {
+    const emailContentStream = await mailbox.getEmailContent(uid)
+    if (emailContentStream) {
       console.log(`Downloading and parsing the email content. (UID: ${uid})`)
-      const parsedEmail = await mailparser.simpleParser(emailContent)
+      const parsedEmail = await mailparser.simpleParser(emailContentStream)
       console.log(`Sending the email to Discord. (UID: ${uid})`)
       await sendEmailToDiscord(parsedEmail, config)
       console.log(`Marking email as read. (UID: ${uid})`)

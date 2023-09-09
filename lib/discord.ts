@@ -1,5 +1,5 @@
 import * as discordjs from 'discord.js'
-import * as util from 'util'
+import * as util from 'node:util'
 
 export interface DiscordMessage {
   content: string

@@ -1,5 +1,5 @@
-import { Construct } from 'constructs'
 import { App, Stack } from 'aws-cdk-lib'
+import { Construct } from 'constructs'
 
 import { ImapToDiscord } from '../lib'
 

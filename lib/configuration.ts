@@ -1,7 +1,7 @@
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3'
 import getStream from 'get-stream'
+import * as stream from 'node:stream'
 import { z } from 'zod'
-import * as stream from 'stream'
 
 const configFileSchema = z.object({
   user: z.string(),

@@ -6,7 +6,7 @@ AWS Lambda that retrieves emails from an IMAP mailbox and sends them to Discord.
 
 - AWS account and credentials
 - Permission to create the Discord webhook
-- Node 16
+- Node 18
 - npm 7
 
 ## Setup
@@ -26,9 +26,7 @@ AWS Lambda that retrieves emails from an IMAP mailbox and sends them to Discord.
    | `port`              | number  | The IMAP port. (Optional, defaults to port `993` with TLS and `143` without.) |
    | `folder`            | string  | The folder from which to retrieve emails. (Optional, defaults to `"Inbox"`.)  |
    | `discordWebhookUrl` | string  | The Discord webhook URL for the channel.                                      |
-   | `glossary`          | object  | `string`->`string` mapping of words to descriptions. When a word from the     |
-   |                     |         | glossary is found in an email, that word and its description will be added to |
-   |                     |         | the Discord message as an embed. (Optional, defaults to no glossary.)         |
+   | `glossary`          | object  | `string`->`string` mapping of words to descriptions. When a word from the glossary is found in an email, that word and its description will be added to the Discord message as an embed. (Optional, defaults to no glossary.) |
 
 3. Set the `CONFIG_FILE` environment variable to the ARN of this configuration file in S3.
 

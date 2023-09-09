@@ -1,4 +1,3 @@
-import { Construct } from 'constructs'
 import {
   Duration,
   Fn,
@@ -11,6 +10,7 @@ import {
   aws_logs,
   aws_iam,
 } from 'aws-cdk-lib'
+import { Construct } from 'constructs'
 
 /**
  * @summary The properties for the ImapToDiscord class.
@@ -77,7 +77,7 @@ export class ImapToDiscord extends Construct {
 
     // Lambda function bundled using esbuild
     this.lambdaFunction = new aws_lambda_nodejs.NodejsFunction(this, 'lambda', {
-      runtime: aws_lambda.Runtime.NODEJS_16_X,
+      runtime: aws_lambda.Runtime.NODEJS_18_X,
       environment: {
         CONFIG_FILE: props.configFile,
         DYNAMODB_TABLE_NAME: this.table.tableName,
@@ -90,10 +90,10 @@ export class ImapToDiscord extends Construct {
       reservedConcurrentExecutions: 1,
       bundling: {
         sourceMap: true,
-        target: 'es2020',
+        target: 'es2021',
         // Dependencies to exclude from the build
         externalModules: [
-          'aws-sdk', // already available in the lambda runtime
+          '@aws-sdk/', // already available in the lambda runtime
           'ffmpeg-static', // dependency of discord.js that isn't used at runtime
         ],
         ...props.lambdaFunctionProps?.bundling,

@@ -4,14 +4,16 @@ import * as stream from 'node:stream'
 import { z } from 'zod'
 
 const configFileSchema = z.object({
-  user: z.string(),
-  password: z.string(),
-  host: z.string(),
+  user: z.string().min(1),
+  password: z.string().min(1),
+  host: z.string().min(1),
   tls: z.boolean().default(true),
   port: z.number().optional(),
-  folder: z.string().default('INBOX'),
-  discordWebhookUrl: z.string(),
-  glossary: z.record(z.string()).default({}),
+  folder: z.string().min(1).default('INBOX'),
+  discordWebhookUrl: z.string().min(1),
+  glossary: z.record(z.string().min(1)).default({}),
+  allowList: z.string().min(1).array().default([]),
+  denyList: z.string().min(1).array().default([]),
 })
 type ConfigFileSchemaType = z.infer<typeof configFileSchema>
 

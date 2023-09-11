@@ -6,6 +6,7 @@ import * as crypto from 'node:crypto'
 import { Configuration, getConfiguration } from './configuration'
 import * as discord from './discord'
 import * as dynamodb from './dynamodb'
+import { satisfiesFilter } from './filter'
 import { Imap, ImapMailbox } from './imap'
 
 type Context = Pick<lambda.Context, 'getRemainingTimeInMillis'>
@@ -93,11 +94,16 @@ async function processEmails({
     const emailContentStream = await mailbox.getEmailContent(uid)
     if (emailContentStream) {
       console.log(`Downloading and parsing the email content. (UID: ${uid})`)
-      const parsedEmail = await mailparser.simpleParser(emailContentStream)
-      console.log(`Sending the email to Discord. (UID: ${uid})`)
-      await sendEmailToDiscord(parsedEmail, config)
-      console.log(`Marking email as read. (UID: ${uid})`)
-      await mailbox.markAsRead(uid)
+      const parsedEmail = await mailparser.simpleParser(emailContentStream, {
+        skipTextToHtml: true,
+      })
+      console.log(`Download complete. (UID: ${uid})`)
+      if (satisfiesFilter({ parsedEmail, config, uid })) {
+        console.log(`Sending the email to Discord. (UID: ${uid})`)
+        await sendEmailToDiscord(parsedEmail, config)
+        console.log(`Marking email as read. (UID: ${uid})`)
+        await mailbox.markAsRead(uid)
+      }
     } else {
       console.log(`Email not found. (UID: ${uid})`)
     }

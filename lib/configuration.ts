@@ -27,11 +27,22 @@ export async function getConfiguration(): Promise<Configuration> {
 
     const body = await getStream(configFile.Body as stream.Readable)
 
-    const config = parseConfig(body)
-    return { port: config.tls ? 993 : 143, ...config }
+    try {
+      return parseConfiguration(body)
+    } catch (e) {
+      const error = e as Error
+      throw new Error(
+        `Invalid configuration found in S3.\n${error.message || ''}`
+      )
+    }
   } finally {
     s3.destroy()
   }
+}
+
+export function parseConfiguration(configAsString: string): Configuration {
+  const config = configFileSchema.parse(JSON.parse(configAsString))
+  return { port: config.tls ? 993 : 143, ...config }
 }
 
 function s3GetObjectCommand(): GetObjectCommand {
@@ -43,15 +54,4 @@ function s3GetObjectCommand(): GetObjectCommand {
     )
   }
   return new GetObjectCommand({ Bucket: match[1], Key: match[2] })
-}
-
-function parseConfig(body: string): ConfigFileSchemaType {
-  try {
-    return configFileSchema.parse(JSON.parse(body))
-  } catch (e) {
-    const error = e as Error
-    throw new Error(
-      `Invalid configuration found in S3.\n${error.message || ''}`
-    )
-  }
 }

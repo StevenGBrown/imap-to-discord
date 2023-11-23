@@ -123,7 +123,7 @@ export class ImapToDiscord extends Construct {
     // Cloudwatch rule to trigger the lambda periodically
     new aws_events.Rule(this, 'rule', {
       schedule:
-        props.lambdaSchedule ?? aws_events.Schedule.rate(Duration.minutes(10)),
+        props.lambdaSchedule ?? aws_events.Schedule.rate(Duration.hours(1)),
       targets: [new aws_events_targets.LambdaFunction(this.lambdaFunction)],
       description: `Trigger lambda ${this.lambdaFunction.functionName}`,
     })

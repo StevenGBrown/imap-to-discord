@@ -34,15 +34,15 @@
     "discord.js": "12.5.3",
     "escape-string-regexp": "4.0.0",
     "get-stream": "6.0.1",
+    "imapflow": "1.0.144",
     "mailparser": "3.6.5",
-    "node-imap": "0.9.6",
     "zod": "3.22.3"
   },
   "devDependencies": {
     "@types/aws-lambda": "8.10.84",
+    "@types/imapflow": "1.0.15",
     "@types/mailparser": "3.4.0",
     "@types/node": "18.17.15",
-    "@types/node-imap": "0.9.0",
     "@types/ws": "8.2.1",
     "@typescript-eslint/eslint-plugin": "5.60.1",
     "@typescript-eslint/parser": "5.60.1",

@@ -42,21 +42,21 @@
     "@types/aws-lambda": "8.10.84",
     "@types/imapflow": "1.0.15",
     "@types/mailparser": "3.4.0",
-    "@types/node": "18.17.15",
+    "@types/node": "20.11.10",
     "@types/ws": "8.2.1",
-    "@typescript-eslint/eslint-plugin": "5.60.1",
-    "@typescript-eslint/parser": "5.60.1",
+    "@typescript-eslint/eslint-plugin": "6.19.1",
+    "@typescript-eslint/parser": "6.19.1",
     "aws-cdk": "2.124.0",
-    "esbuild": "0.13.8",
+    "esbuild": "0.20.0",
     "eslint": "8.43.0",
     "eslint-config-prettier": "8.3.0",
     "eslint-plugin-prettier": "3.4.0",
     "eslint-plugin-security": "1.4.0",
-    "ts-node": "9.1.1",
-    "typescript": "4.4.3"
+    "ts-node": "10.9.2",
+    "typescript": "5.3.3"
   },
   "engines": {
-    "node": ">=18",
+    "node": ">=20",
     "npm": ">=7"
   }
 }

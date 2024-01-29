@@ -82,7 +82,7 @@ export class ImapToDiscord extends Construct {
     }
     this.lambdaFunction = new aws_lambda_nodejs.NodejsFunction(this, 'lambda', {
       functionName,
-      runtime: aws_lambda.Runtime.NODEJS_18_X,
+      runtime: aws_lambda.Runtime.NODEJS_20_X,
       environment: {
         CONFIG_FILE: props.configFile,
         DYNAMODB_TABLE_NAME: this.table.tableName,
@@ -98,7 +98,7 @@ export class ImapToDiscord extends Construct {
       reservedConcurrentExecutions: 1,
       bundling: {
         sourceMap: true,
-        target: 'es2021',
+        target: 'es2022',
         // Dependencies to exclude from the build
         externalModules: [
           '@aws-sdk/', // already available in the lambda runtime

@@ -6,7 +6,7 @@ AWS Lambda that retrieves emails from an IMAP mailbox and sends them to Discord.
 
 - AWS account and credentials
 - Permission to create the Discord webhook
-- Node 18
+- Node 20
 - npm 7
 
 ## Setup

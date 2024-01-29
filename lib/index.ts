@@ -76,7 +76,12 @@ export class ImapToDiscord extends Construct {
     })
 
     // Lambda function bundled using esbuild
+    const { functionName } = {
+      functionName: 'imap-to-discord',
+      ...props.lambdaFunctionProps,
+    }
     this.lambdaFunction = new aws_lambda_nodejs.NodejsFunction(this, 'lambda', {
+      functionName,
       runtime: aws_lambda.Runtime.NODEJS_18_X,
       environment: {
         CONFIG_FILE: props.configFile,
@@ -84,7 +89,10 @@ export class ImapToDiscord extends Construct {
         NODE_OPTIONS: '--enable-source-maps',
         ...props.lambdaFunctionProps?.environment,
       },
-      logRetention: aws_logs.RetentionDays.ONE_MONTH,
+      logGroup: new aws_logs.LogGroup(this, 'lambda-logGroup', {
+        logGroupName: functionName ? `/aws/lambda/${functionName}` : undefined,
+        retention: aws_logs.RetentionDays.ONE_MONTH,
+      }),
       memorySize: 512,
       timeout: Duration.minutes(5),
       reservedConcurrentExecutions: 1,

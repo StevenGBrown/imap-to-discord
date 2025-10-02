@@ -34,7 +34,7 @@
     "discord.js": "12.5.3",
     "escape-string-regexp": "4.0.0",
     "get-stream": "6.0.1",
-    "imapflow": "1.0.162",
+    "imapflow": "1.0.198",
     "mailparser": "3.6.7",
     "zod": "3.22.3"
   },

@@ -47,7 +47,7 @@ export function parseConfiguration(configAsString: string): Configuration {
 
 function s3GetObjectCommand(): GetObjectCommand {
   const configFileArn = process.env.CONFIG_FILE || ''
-  const match = configFileArn.match(/^arn:aws:s3:::([^/]+)\/(.+)$/)
+  const match = /^arn:aws:s3:::([^/]+)\/(.+)$/.exec(configFileArn)
   if (!match) {
     throw new Error(
       `The CONFIG_FILE environment variable must be an S3 ARN, but was "${configFileArn}"`

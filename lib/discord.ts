@@ -45,13 +45,13 @@ export async function sendMessage({
 }): Promise<void> {
   const webhookClient = createWebhookClient({ discordWebhookUrl })
   try {
-    const [content, options] = [getContent(message), getOptions(message)]
+    const webhookMessage = prepareWebhookMessage(message)
     if ((process.env.DRY_RUN || '').toLowerCase() === 'true') {
       console.log('DRY_RUN=true (not sending the message to Discord).')
-      console.log(util.inspect({ content, options }, { depth: null }))
+      console.log(util.inspect({ webhookMessage }, { depth: null }))
       return
     }
-    await webhookClient.send(content, options)
+    await webhookClient.send(webhookMessage)
   } finally {
     webhookClient.destroy()
   }
@@ -62,21 +62,21 @@ function createWebhookClient({
 }: {
   discordWebhookUrl: string
 }): discordjs.WebhookClient {
-  const match = discordWebhookUrl.match(/\/([^/]+)\/([^/]+)$/i)
-  if (!match) {
-    throw new Error(`Invalid Discord webhook URL: "${discordWebhookUrl}"`)
+  const match = /\/([^/]+)\/([^/]+)$/i.exec(discordWebhookUrl)
+  if (match) {
+    const [id, token] = match.slice(1)
+    if (id && token) {
+      return new discordjs.WebhookClient({ id, token })
+    }
   }
-  const [id, token] = match.slice(1)
-  return new discordjs.WebhookClient(id, token)
+  throw new Error(`Invalid Discord webhook URL: "${discordWebhookUrl}"`)
 }
 
-function getContent(message: DiscordMessage): string {
-  const { content } = message
-  return truncate(content, MAX_MESSAGE_CONTENT_LENGTH)
-}
-
-function getOptions(message: DiscordMessage): discordjs.WebhookMessageOptions {
+function prepareWebhookMessage(
+  message: DiscordMessage
+): discordjs.WebhookMessageCreateOptions {
   return {
+    content: truncate(message.content, MAX_MESSAGE_CONTENT_LENGTH),
     files: [...message.files],
     embeds: getEmbeds(message),
   }

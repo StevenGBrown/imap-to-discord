@@ -36,7 +36,10 @@ export class ImapMailbox {
   public readonly uidnext: number
   public readonly uidvalidity: number
 
-  constructor(private readonly client: ImapFlow, mailbox: MailboxObject) {
+  constructor(
+    private readonly client: ImapFlow,
+    mailbox: MailboxObject
+  ) {
     this.uidnext = mailbox.uidNext
     this.uidvalidity = Number(mailbox.uidValidity) // 32 bits, fits within MAX_SAFE_INTEGER
   }
@@ -45,10 +48,12 @@ export class ImapMailbox {
     const uids = await this.client.search({ uid: `${uid}:*` }, { uid: true })
     return {
       uids: uids
-        // Includes the UID of the latest email even if it is outside of the requested range
-        // https://stackoverflow.com/questions/9147424/imap-search-for-messages-with-uid-greater-than-x-or-generally-after-my-last-s#comment29989969_9148609
-        .filter((value) => value >= uid)
-        .sort((a, b) => a - b),
+        ? uids
+            // Includes the UID of the latest email even if it is outside of the requested range
+            // https://stackoverflow.com/questions/9147424/imap-search-for-messages-with-uid-greater-than-x-or-generally-after-my-last-s#comment29989969_9148609
+            .filter((value) => value >= uid)
+            .sort((a, b) => a - b)
+        : [],
     }
   }
 

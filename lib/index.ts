@@ -11,6 +11,7 @@ import {
   aws_iam,
 } from 'aws-cdk-lib'
 import { Construct } from 'constructs'
+import * as path from 'node:path'
 
 /**
  * @summary The properties for the ImapToDiscord class.
@@ -82,7 +83,8 @@ export class ImapToDiscord extends Construct {
     }
     this.lambdaFunction = new aws_lambda_nodejs.NodejsFunction(this, 'lambda', {
       functionName,
-      runtime: aws_lambda.Runtime.NODEJS_20_X,
+      entry: path.join(import.meta.dirname, 'index.lambda.ts'),
+      runtime: aws_lambda.Runtime.NODEJS_22_X,
       environment: {
         CONFIG_FILE: props.configFile,
         DYNAMODB_TABLE_NAME: this.table.tableName,
@@ -90,7 +92,9 @@ export class ImapToDiscord extends Construct {
         ...props.lambdaFunctionProps?.environment,
       },
       logGroup: new aws_logs.LogGroup(this, 'lambda-logGroup', {
-        logGroupName: functionName ? `/aws/lambda/${functionName}` : undefined,
+        ...(functionName
+          ? { logGroupName: `/aws/lambda/${functionName}` }
+          : {}),
         retention: aws_logs.RetentionDays.ONE_MONTH,
       }),
       memorySize: 512,
@@ -99,11 +103,6 @@ export class ImapToDiscord extends Construct {
       bundling: {
         sourceMap: true,
         target: 'es2022',
-        // Dependencies to exclude from the build
-        externalModules: [
-          '@aws-sdk/', // already available in the lambda runtime
-          'ffmpeg-static', // dependency of discord.js that isn't used at runtime
-        ],
         ...props.lambdaFunctionProps?.bundling,
       },
       ...props.lambdaFunctionProps,

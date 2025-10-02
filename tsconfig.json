@@ -1,17 +1,16 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "declaration": true,
-    "removeComments": true,
-    "target": "es2022",
-    "lib": ["es2022", "dom"],
-    "sourceMap": true,
-    "outDir": "./dist",
-    "baseUrl": "./",
-    "moduleResolution": "node",
+    "module": "es2022",
+    "moduleResolution": "bundler",
+
     "strict": true,
-    "isolatedModules": true,
-    "esModuleInterop": true
+    "noUncheckedIndexedAccess": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+
+    "baseUrl": "./",
+    "outDir": "./dist",
+    "sourceMap": true
   },
   "include": ["bin/**/*", "lib/**/*"]
 }

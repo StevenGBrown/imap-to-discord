@@ -92,20 +92,16 @@ async function processEmails({
   let remaining = uids.length
   for (const uid of uids) {
     const emailContentStream = await mailbox.getEmailContent(uid)
-    if (emailContentStream) {
-      console.log(`Downloading and parsing the email content. (UID: ${uid})`)
-      const parsedEmail = await mailparser.simpleParser(emailContentStream, {
-        skipTextToHtml: true,
-      })
-      console.log(`Download complete. (UID: ${uid})`)
-      if (satisfiesFilter({ parsedEmail, config, uid })) {
-        console.log(`Sending the email to Discord. (UID: ${uid})`)
-        await sendEmailToDiscord(parsedEmail, config)
-        console.log(`Marking email as read. (UID: ${uid})`)
-        await mailbox.markAsRead(uid)
-      }
-    } else {
-      console.log(`Email not found. (UID: ${uid})`)
+    console.log(`Downloading and parsing the email content. (UID: ${uid})`)
+    const parsedEmail = await mailparser.simpleParser(emailContentStream, {
+      skipTextToHtml: true,
+    })
+    console.log(`Download complete. (UID: ${uid})`)
+    if (satisfiesFilter({ parsedEmail, config, uid })) {
+      console.log(`Sending the email to Discord. (UID: ${uid})`)
+      await sendEmailToDiscord(parsedEmail, config)
+      console.log(`Marking email as read. (UID: ${uid})`)
+      await mailbox.markAsRead(uid)
     }
     remaining--
     if (remaining && context.getRemainingTimeInMillis() < 1000 * 60) {
@@ -134,7 +130,6 @@ async function sendEmailToDiscord(
     .filter(({ value }) => !!value)
     .map(
       ({ label, value }) =>
-        // eslint-disable-next-line security/detect-non-literal-fs-filename
         `**${label}**: ${discord.escapeMarkdown(discord.truncate(value, 200))}`
     )
     .join('\n')

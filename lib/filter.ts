@@ -11,7 +11,7 @@ export function satisfiesFilter({
   config: Configuration
   uid: number
 }): boolean {
-  const from = (parsedEmail.from?.value ?? [])[0].address ?? ''
+  const from = parsedEmail.from?.value[0]?.address ?? ''
   const allowListMatch = getMostSpecificMatch({ from, list: config.allowList })
   if (config.allowList.length && !allowListMatch) {
     console.log(

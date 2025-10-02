@@ -12,7 +12,7 @@ async function main() {
 }
 
 if (require.main === module) {
-  main().catch((e) => {
+  main().catch((e: unknown) => {
     console.error(e)
     process.exitCode = 1
   })

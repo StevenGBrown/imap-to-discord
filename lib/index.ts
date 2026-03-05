@@ -84,7 +84,7 @@ export class ImapToDiscord extends Construct {
     this.lambdaFunction = new aws_lambda_nodejs.NodejsFunction(this, 'lambda', {
       functionName,
       entry: path.join(import.meta.dirname, 'index.lambda.ts'),
-      runtime: aws_lambda.Runtime.NODEJS_22_X,
+      runtime: aws_lambda.Runtime.NODEJS_24_X,
       environment: {
         CONFIG_FILE: props.configFile,
         DYNAMODB_TABLE_NAME: this.table.tableName,
@@ -102,7 +102,7 @@ export class ImapToDiscord extends Construct {
       reservedConcurrentExecutions: 1,
       bundling: {
         sourceMap: true,
-        target: 'es2022',
+        target: 'es2023',
         ...props.lambdaFunctionProps?.bundling,
       },
       ...props.lambdaFunctionProps,

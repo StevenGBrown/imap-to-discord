@@ -44,7 +44,7 @@
     "@types/aws-lambda": "8.10.84",
     "@types/imapflow": "1.0.15",
     "@types/mailparser": "3.4.0",
-    "@types/node": "22.18.8",
+    "@types/node": "24.11.0",
     "@types/ws": "8.2.1",
     "aws-cdk": "2.1109.0",
     "esbuild": "0.25.0",
@@ -57,7 +57,7 @@
     "typescript-eslint": "8.45.0"
   },
   "engines": {
-    "node": ">=22",
+    "node": ">=24",
     "npm": ">=7"
   }
 }

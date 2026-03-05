@@ -17,7 +17,6 @@ AWS Lambda that retrieves emails from an IMAP mailbox and sends them to Discord.
 2. Create a configuration file in S3.
 
    This file should contain a JSON object with the following keys:
-
    - `user` (string)  
      The IMAP username, usually the email address.
 
@@ -48,27 +47,35 @@ AWS Lambda that retrieves emails from an IMAP mailbox and sends them to Discord.
    - `glossary` (object with string keys and values, optional)  
      A mapping of words to descriptions. When a word from the glossary is found in an email, that word and its description will be added to the Discord message as an embed. Defaults to no glossary.
 
-3. Set the `CONFIG_FILE` environment variable to the ARN of this configuration file in S3.
+## How to deploy to AWS
 
-4. Configure your AWS credentials and region.  
-   https://docs.aws.amazon.com/cdk/latest/guide/cli.html#cli-environment
+- Configure your AWS credentials and region.  
+  https://docs.aws.amazon.com/cdk/latest/guide/cli.html#cli-environment
+
+- `git clone https://github.com/StevenGBrown/imap-to-discord`
+- `cd imap-to-discord`
+- `npm run bootstrap` (if you haven't used the AWS CDK in this account/region before)
+
+- Define the following environment variable:
+  - `CONFIG_FILE`:  
+    The ARN of the configuration file in S3.
+
+- `npm run deploy`
 
 ## How to run locally
 
 ```
-npm install
+npm run init
 npm start
 ```
 
-## How to deploy to AWS
-
-```
-npm install
-npm run bootstrap
-npm run deploy
-```
-
 ## Commands
+
+- `npm run init`  
+  Run when first cloning the repository or when checking out a different commit.
+
+- `npm run check`  
+  Check all the things, e.g. linting and tests.
 
 - `npm run bootstrap`  
   Bootstrap the AWS CDK in your default AWS account/region.  
@@ -77,12 +84,8 @@ npm run deploy
 - `npm run deploy`  
   Deploy the app to your default AWS account/region.
 
-- `npm run cdk -- COMMAND ARGUMENTS...`  
-  Run an AWS CDK Toolkit command.  
-  See: https://docs.aws.amazon.com/cdk/latest/guide/cli.html
-
-- `npm run lint`  
-  Run type-checking and the linter over the code.
-
 - `npm run start`  
   Run the code locally for testing purposes.
+
+- `npm run upgrade`  
+  Upgrade the dependencies.

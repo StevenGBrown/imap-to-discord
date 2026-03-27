@@ -44,7 +44,7 @@
     "zod": "3.22.3"
   },
   "devDependencies": {
-    "@eslint/compat": "1.4.0",
+    "@eslint/compat": "2.0.3",
     "@types/aws-lambda": "8.10.84",
     "@types/imapflow": "1.0.15",
     "@types/mailparser": "3.4.0",
@@ -52,7 +52,7 @@
     "@types/ws": "8.2.1",
     "aws-cdk": "2.1109.0",
     "esbuild": "0.25.0",
-    "eslint": "9.36.0",
+    "eslint": "10.1.0",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-prettier": "5.5.4",
     "eslint-plugin-security": "3.0.1",
@@ -60,7 +60,7 @@
     "taze": "19.10.0",
     "tsx": "4.20.6",
     "typescript": "5.9.3",
-    "typescript-eslint": "8.45.0"
+    "typescript-eslint": "8.57.2"
   },
   "engines": {
     "node": ">=24",

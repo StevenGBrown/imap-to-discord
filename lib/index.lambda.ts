@@ -27,7 +27,7 @@ export async function handler(event: unknown, context: Context) {
     console.timeEnd('Mailbox opened')
     let { uidnext } = mailbox
 
-    if (!nextToRead || mailboxHash !== nextToRead.mailboxHash) {
+    if (mailboxHash !== nextToRead?.mailboxHash) {
       // First time running the lambda or the connection details have changed.
       console.log('First time connecting to this mailbox.')
     } else if (mailbox.uidvalidity !== nextToRead.uidvalidity) {

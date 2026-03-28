@@ -87,5 +87,5 @@ npm start
 - `npm run start`  
   Run the code locally for testing purposes.
 
-- `npm run upgrade`  
-  Upgrade the dependencies.
+- `npm run update-deps`  
+  Update the dependencies.

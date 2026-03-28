@@ -28,7 +28,7 @@
     "check:lint": "eslint . --max-warnings 0",
     "check:cdk": "CONFIG_FILE=arn:aws:s3:::bucket/key cdk synth",
     "start": "tsx bin/start.ts",
-    "upgrade": "npx taze major --include-locked --write && npm install && node --run fix"
+    "update-deps": "npm-check-updates --upgrade --peer --install never && del-cli package-lock.json && npm install"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "3.997.0",
@@ -52,13 +52,14 @@
     "@types/node": "24.11.0",
     "@types/ws": "8.2.1",
     "aws-cdk": "2.1109.0",
+    "del-cli": "7.0.0",
     "esbuild": "0.25.0",
     "eslint": "10.1.0",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-prettier": "5.5.4",
     "eslint-plugin-security": "4.0.0",
+    "npm-check-updates": "19.6.6",
     "npm-run-all2": "8.0.4",
-    "taze": "19.10.0",
     "tsx": "4.20.6",
     "typescript": "5.9.3",
     "typescript-eslint": "8.57.2"

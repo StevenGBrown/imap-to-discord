@@ -65,13 +65,13 @@ AWS Lambda that retrieves emails from an IMAP mailbox and sends them to Discord.
 ## How to run locally
 
 ```
-npm run init
+npm run build
 npm start
 ```
 
 ## Commands
 
-- `npm run init`  
+- `npm run build`  
   Run when first cloning the repository or when checking out a different commit.
 
 - `npm run check`  

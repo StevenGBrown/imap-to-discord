@@ -45,6 +45,7 @@
   },
   "devDependencies": {
     "@eslint/compat": "2.0.3",
+    "@eslint/js": "9.39.3",
     "@types/aws-lambda": "8.10.84",
     "@types/imapflow": "1.0.15",
     "@types/mailparser": "3.4.0",

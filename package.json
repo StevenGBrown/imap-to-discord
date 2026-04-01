@@ -34,7 +34,7 @@
     "@aws-sdk/client-dynamodb": "3.997.0",
     "@aws-sdk/client-s3": "3.997.0",
     "@aws-sdk/lib-dynamodb": "3.997.0",
-    "aws-cdk-lib": "2.241.0",
+    "aws-cdk-lib": "2.246.0",
     "constructs": "10.5.1",
     "discord.js": "14.26.0",
     "escape-string-regexp": "4.0.0",

@@ -11,7 +11,7 @@ const configFileSchema = z.object({
   port: z.number().optional(),
   folder: z.string().min(1).default('INBOX'),
   discordWebhookUrl: z.string().min(1),
-  glossary: z.record(z.string().min(1)).default({}),
+  glossary: z.record(z.string(), z.string().min(1)).default({}),
   allowList: z.string().min(1).array().default([]),
   denyList: z.string().min(1).array().default([]),
 })
